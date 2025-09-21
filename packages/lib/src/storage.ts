@@ -262,7 +262,7 @@ export class ProfileStorage {
 export class ChromeStorage {
   async getSettings(): Promise<StorageSettings> {
     const result = await chrome.storage.local.get(['settings']);
-    return result.settings || {
+    return result['settings'] || {
       aiAssist: false,
       hotkey: 'Alt+A',
       allowlist: [
@@ -280,7 +280,7 @@ export class ChromeStorage {
 
   async getActiveProfileId(): Promise<string | null> {
     const result = await chrome.storage.local.get(['activeProfileId']);
-    return result.activeProfileId || null;
+    return result['activeProfileId'] || null;
   }
 
   async setActiveProfileId(id: string | null): Promise<void> {
@@ -289,13 +289,13 @@ export class ChromeStorage {
 
   async getRules(domain: string): Promise<StorageRule[]> {
     const result = await chrome.storage.local.get(['rules']);
-    const rules = result.rules || {};
+    const rules = result['rules'] || {};
     return rules[domain] || [];
   }
 
   async saveRule(rule: StorageRule): Promise<void> {
     const result = await chrome.storage.local.get(['rules']);
-    const rules = result.rules || {};
+    const rules = result['rules'] || {};
     
     if (!rules[rule.domain]) {
       rules[rule.domain] = [];
@@ -307,7 +307,7 @@ export class ChromeStorage {
 
   async deleteRule(ruleId: string, domain: string): Promise<void> {
     const result = await chrome.storage.local.get(['rules']);
-    const rules = result.rules || {};
+    const rules = result['rules'] || {};
     
     if (rules[domain]) {
       rules[domain] = rules[domain].filter((rule: StorageRule) => rule.id !== ruleId);

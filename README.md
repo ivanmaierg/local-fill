@@ -61,6 +61,52 @@ In this era of AI and software, **Personally Identifiable Information (PII) is m
    - Open Chrome and navigate to `chrome://extensions/`
    - Enable "Developer mode" (toggle in top right)
    - Click "Load unpacked" and select the `apps/extension/dist` folder
+   - The extension should now appear in your extensions list
+
+### Loading the Extension (Detailed Steps)
+
+1. **Open Chrome Extensions Page**
+   - Type `chrome://extensions/` in your address bar, or
+   - Click the three dots menu → More tools → Extensions
+
+2. **Enable Developer Mode**
+   - Toggle the "Developer mode" switch in the top-right corner
+   - This enables the "Load unpacked" option
+
+3. **Load the Extension**
+   - Click "Load unpacked" button
+   - Navigate to your project folder: `local-fill/apps/extension/dist`
+   - Select the `dist` folder and click "Select Folder"
+
+4. **Verify Installation**
+   - The extension should appear in your extensions list
+   - You should see "Local-Fill: Job Application Autofill" with version 0.1.0
+   - The extension icon should appear in your Chrome toolbar
+
+5. **Pin the Extension (Optional)**
+   - Click the puzzle piece icon in Chrome toolbar
+   - Find "Local-Fill" and click the pin icon to keep it visible
+
+### Using the Sidebar
+
+The extension now features a **sidebar interface** instead of a popup:
+
+1. **Opening the Sidebar**
+   - Click the extension icon in your toolbar, or
+   - Press `Alt+A` on any supported job application page
+   - The sidebar will appear on the right side of your screen
+
+2. **Sidebar Features**
+   - **Toggle Dark Mode**: Click the sun/moon icon in the header
+   - **Collapse/Expand**: Click the arrow icon to minimize the sidebar
+   - **Close**: Click the X icon to close the sidebar
+   - **Auto-suggestions**: Focus on form fields to see contextual suggestions
+
+3. **Supported Sites**
+   - Greenhouse: `boards.greenhouse.io`
+   - Lever: `jobs.lever.co`
+   - Workday: `*.myworkdayjobs.com`
+   - Ashby: `*.ashbyhq.com`
 
 ### Creating Your Profile
 

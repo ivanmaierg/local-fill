@@ -21,6 +21,7 @@ export type ProfileExportResult = {
 } | {
   success: false;
   error: string;
+  details?: any;
 }
 
 export class ProfileManager {

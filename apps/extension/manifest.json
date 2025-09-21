@@ -10,22 +10,14 @@
     "tabs"
   ],
   "host_permissions": [
-    "https://boards.greenhouse.io/*",
-    "https://jobs.lever.co/*",
-    "https://*.myworkdayjobs.com/*",
-    "https://*.ashbyhq.com/*"
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://boards.greenhouse.io/*",
-        "https://jobs.lever.co/*",
-        "https://*.myworkdayjobs.com/*",
-        "https://*.ashbyhq.com/*"
-      ],
+      "matches": ["<all_urls>"],
       "js": ["content.js"],
       "css": ["styles.css"],
       "run_at": "document_end",
@@ -33,7 +25,6 @@
     }
   ],
   "action": {
-    "default_popup": "options.html",
     "default_title": "Local-Fill: Job Autofill",
     "default_icon": {
       "16": "icons/icon-16.png",
@@ -47,6 +38,8 @@
     {
       "resources": [
         "overlay.js",
+        "client.js",
+        "profile.manager.js",
         "overlay.css",
         "icons/*.png"
       ],
