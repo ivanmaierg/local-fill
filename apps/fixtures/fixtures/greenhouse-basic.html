@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenhouse Job Application - Test Fixture</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; }
+        input, textarea, select { width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; }
+        .required { color: red; }
+        .submit-btn { background: #007bff; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Software Engineer - Test Company</h1>
+    <p>Please fill out the application form below.</p>
+    
+    <form id="application-form">
+        <div class="form-group">
+            <label for="applicant.name">Full Name <span class="required">*</span></label>
+            <input type="text" id="applicant.name" name="applicant.name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.email">Email Address <span class="required">*</span></label>
+            <input type="email" id="applicant.email" name="applicant.email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.phone">Phone Number</label>
+            <input type="tel" id="applicant.phone" name="applicant.phone">
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.linkedin">LinkedIn Profile</label>
+            <input type="url" id="applicant.linkedin" name="applicant.linkedin" placeholder="https://linkedin.com/in/yourprofile">
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.github">GitHub Profile</label>
+            <input type="url" id="applicant.github" name="applicant.github" placeholder="https://github.com/yourusername">
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.website">Personal Website</label>
+            <input type="url" id="applicant.website" name="applicant.website" placeholder="https://yourwebsite.com">
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.location">Location</label>
+            <input type="text" id="applicant.location" name="applicant.location" placeholder="City, State, Country">
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.resume">Resume/CV</label>
+            <input type="file" id="applicant.resume" name="applicant.resume" accept=".pdf,.doc,.docx">
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.cover_letter">Cover Letter</label>
+            <textarea id="applicant.cover_letter" name="applicant.cover_letter" rows="6" placeholder="Tell us why you're interested in this position..."></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.experience">Years of Experience</label>
+            <select id="applicant.experience" name="applicant.experience">
+                <option value="">Select experience level</option>
+                <option value="0-1">0-1 years</option>
+                <option value="2-3">2-3 years</option>
+                <option value="4-5">4-5 years</option>
+                <option value="6-10">6-10 years</option>
+                <option value="10+">10+ years</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.work_authorization">Work Authorization</label>
+            <select id="applicant.work_authorization" name="applicant.work_authorization">
+                <option value="">Select authorization status</option>
+                <option value="authorized">Authorized to work in the US</option>
+                <option value="sponsor_required">Will require sponsorship</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.relocation">Willing to Relocate</label>
+            <select id="applicant.relocation" name="applicant.relocation">
+                <option value="">Select relocation preference</option>
+                <option value="yes">Yes, willing to relocate</option>
+                <option value="no">No, not willing to relocate</option>
+                <option value="maybe">Maybe, depending on location</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.remote">Remote Work Preference</label>
+            <select id="applicant.remote" name="applicant.remote">
+                <option value="">Select remote preference</option>
+                <option value="full_remote">Full remote</option>
+                <option value="hybrid">Hybrid (part remote, part office)</option>
+                <option value="office">Office only</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.salary_expectation">Salary Expectation</label>
+            <input type="text" id="applicant.salary_expectation" name="applicant.salary_expectation" placeholder="e.g., $80,000 - $100,000">
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.start_date">Available Start Date</label>
+            <input type="date" id="applicant.start_date" name="applicant.start_date">
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.references">References</label>
+            <textarea id="applicant.references" name="applicant.references" rows="4" placeholder="Please provide 2-3 professional references..."></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="applicant.additional_info">Additional Information</label>
+            <textarea id="applicant.additional_info" name="applicant.additional_info" rows="4" placeholder="Any additional information you'd like to share..."></textarea>
+        </div>
+        
+        <button type="submit" class="submit-btn">Submit Application</button>
+    </form>
+    
+    <script>
+        // Test script to verify form functionality
+        document.getElementById('application-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted! (This is a test fixture)');
+        });
+        
+        // Add some test data for development
+        if (window.location.search.includes('testdata=true')) {
+            document.getElementById('applicant.name').value = 'John Doe';
+            document.getElementById('applicant.email').value = 'john.doe@example.com';
+            document.getElementById('applicant.phone').value = '+1-555-0123';
+            document.getElementById('applicant.linkedin').value = 'https://linkedin.com/in/johndoe';
+            document.getElementById('applicant.github').value = 'https://github.com/johndoe';
+        }
+    </script>
+</body>
+</html>

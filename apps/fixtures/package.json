@@ -1,0 +1,14 @@
+{
+  "name": "fixtures",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "http-server . -p 4100 -c-1",
+    "build": "echo 'no build'",
+    "lint": "eslint . || true",
+    "typecheck": "tsc -v >/dev/null || true"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

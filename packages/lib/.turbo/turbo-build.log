@@ -1,0 +1,27 @@
+
+> lib@0.1.0 build /Users/ivanmaierg/Desktop/projects/local-fill/packages/lib
+> tsup src/index.ts --dts --format=esm,cjs
+
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.0
+CLI Target: es2022
+ESM Build start
+CJS Build start
+ESM dist/index.mjs 33.16 KB
+ESM ⚡️ Build success in 14ms
+CJS dist/index.js 35.27 KB
+CJS ⚡️ Build success in 14ms
+DTS Build start
+error TS2688: Cannot find type definition file for 'chrome'.
+  The file is in the program because:
+    Entry point of type library 'chrome' specified in compilerOptions
+
+Error: error occurred in dts build
+    at Worker.<anonymous> (/Users/ivanmaierg/Desktop/projects/local-fill/node_modules/.pnpm/tsup@8.5.0_jiti@1.21.7_postcss@8.5.6_typescript@5.9.2_yaml@2.8.1/node_modules/tsup/dist/index.js:1545:26)
+    at Worker.emit (node:events:508:28)
+    at MessagePort.<anonymous> (node:internal/worker:271:53)
+    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:827:20)
+    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)
+DTS Build error
+ ELIFECYCLE  Command failed with exit code 1.

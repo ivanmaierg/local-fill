@@ -1,0 +1,10 @@
+{
+  "name": "@local-fill/install-wizard",
+  "private": true,
+  "version": "0.1.0",
+  "description": "One-command installation wizard for Local-Fill extension",
+  "main": "install.sh",
+  "scripts": {
+    "test": "bash install.sh --dry-run"
+  }
+}

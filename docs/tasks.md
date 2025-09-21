@@ -14,17 +14,17 @@ This is a Chrome MV3 extension that provides:
 ## 🎯 Milestones (M0-M6)
 
 ### M0 - Project Scaffold & Infrastructure
-- [ ] Set up Turborepo monorepo structure with pnpm workspaces
-- [ ] Configure MV3 manifest with proper permissions and content scripts
-- [ ] Set up Vite build configuration with multiple entry points
-- [ ] Create IndexedDB wrapper and chrome.storage utilities
-- [ ] Initialize shadcn/ui components library with TailwindCSS
+- [x] Set up Turborepo monorepo structure with pnpm workspaces
+- [x] Configure MV3 manifest with proper permissions and content scripts
+- [x] Set up Vite build configuration with multiple entry points
+- [x] Create IndexedDB wrapper and chrome.storage utilities
+- [x] Initialize shadcn/ui components library with TailwindCSS
 
 ### M1 - Profile Management System
-- [ ] Implement Profile JSON schema validation (Zod, schema v1)
-- [ ] Create Profile import/export functionality with error handling
-- [ ] Build multi-profile storage and active profile management
-- [ ] Add profile validation and sanitization
+- [x] Implement Profile JSON schema validation (Zod, schema v1)
+- [x] Create Profile import/export functionality with error handling
+- [x] Build multi-profile storage and active profile management
+- [x] Add profile validation and sanitization
 
 ### M2 - Core Autofill Engine
 - [ ] Build DOM scanner to extract field candidates from ATS pages
@@ -48,9 +48,9 @@ This is a Chrome MV3 extension that provides:
 - [ ] Integrate with Chrome AI APIs (feature-gated, optional)
 
 ### M5 - Copy LLM Prompt Feature
-- [ ] Implement Copy LLM Prompt button with clipboard API
-- [ ] Create PII-free prompt template for profile generation
-- [ ] Add success/error toast notifications
+- [x] Implement Copy LLM Prompt button with clipboard API
+- [x] Create PII-free prompt template for profile generation
+- [x] Add success/error toast notifications
 
 ### M6 - Polish & Production Readiness
 - [ ] Add performance optimizations (debouncing, timing budgets)
@@ -62,7 +62,7 @@ This is a Chrome MV3 extension that provides:
 ## 🧪 Testing & Quality Assurance
 
 ### Test Infrastructure Setup
-- [ ] Create HTML fixtures for ATS platforms testing
+- [x] Create HTML fixtures for ATS platforms testing
 - [ ] Set up Playwright E2E testing with extension support
 - [ ] Implement unit tests for core modules
 - [ ] Add performance timing budget tests
@@ -77,34 +77,34 @@ This is a Chrome MV3 extension that provides:
 ## 🏗️ Architecture Components
 
 ### Core Modules (`packages/lib/`)
-- [ ] `profile.schema.ts` - Zod validation schemas
+- [x] `profile.schema.ts` - Zod validation schemas
 - [ ] `rules.engine.ts` - Field mapping and rule resolution
 - [ ] `dom.scan.ts` - DOM analysis and candidate extraction
 - [ ] `fill.run.ts` - Autofill execution and event dispatching
 - [ ] `suggest.ts` - Suggestion ranking and snippet generation
-- [ ] `storage.ts` - IndexedDB and chrome.storage wrappers
+- [x] `storage.ts` - IndexedDB and chrome.storage wrappers
 
 ### UI Components (`packages/ui/`)
 - [ ] `ReviewDrawer.tsx` - Review panel with editing capabilities
 - [ ] `SuggestionsPopover.tsx` - On-focus suggestion UI
-- [ ] `CopyPromptButton.tsx` - LLM prompt copying functionality
-- [ ] `ProfileManager.tsx` - Profile switching and management
+- [x] `CopyPromptButton.tsx` - LLM prompt copying functionality
+- [x] `ProfileManager.tsx` - Profile switching and management
 - [ ] `RulesEditor.tsx` - User rules customization interface
 
 ### Extension Pages (`apps/extension/`)
-- [ ] `background.ts` - Service worker for rule engine and messaging
-- [ ] `content.ts` - Content script for DOM interaction and UI
-- [ ] `options/main.tsx` - React options page for settings
-- [ ] `overlay/main.tsx` - Overlay UI components
+- [x] `background.ts` - Service worker for rule engine and messaging
+- [x] `content.ts` - Content script for DOM interaction and UI
+- [x] `options/main.tsx` - React options page for settings
+- [x] `overlay/main.tsx` - Overlay UI components
 
 ## 🔧 Development Environment
 
 ### Build & Development Tools
-- [ ] Configure TypeScript with strict settings
-- [ ] Set up ESLint and Prettier for code quality
-- [ ] Configure TailwindCSS with design tokens
-- [ ] Set up development server with hot reloading
-- [ ] Add build optimization and source maps
+- [x] Configure TypeScript with strict settings
+- [x] Set up ESLint and Prettier for code quality
+- [x] Configure TailwindCSS with design tokens
+- [x] Set up development server with hot reloading
+- [x] Add build optimization and source maps
 
 ### CI/CD Pipeline
 - [ ] GitHub Actions workflow for automated testing
