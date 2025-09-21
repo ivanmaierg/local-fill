@@ -1,3 +1,5 @@
+import { DOMScanner, RulesEngine, FillRunner } from 'lib';
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.set({
     settings: {
@@ -40,14 +42,14 @@ function canMessageTab(tab: chrome.tabs.Tab): boolean {
 }
 
 // Helper function to check if content script is ready
-async function isContentScriptReady(tabId: number): Promise<boolean> {
-  try {
-    await chrome.tabs.sendMessage(tabId, { type: 'PING' });
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
+// async function isContentScriptReady(tabId: number): Promise<boolean> {
+//   try {
+//     await chrome.tabs.sendMessage(tabId, { type: 'PING' });
+//     return true;
+//   } catch (error) {
+//     return false;
+//   }
+// }
 
 chrome.action.onClicked.addListener(async (tab) => {
   if (!canMessageTab(tab)) {
@@ -102,6 +104,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       
     case 'SAVE_RULE':
       handleSaveRule(message.rule, sendResponse);
+      return true;
+    
+    case 'EXECUTE_AUTOFILL':
+      handleExecuteAutofill(message.payload, sendResponse);
       return true;
     
     case 'OPEN_OPTIONS':
@@ -163,4 +169,78 @@ async function handleSaveRule(rule: any, sendResponse: (response: any) => void) 
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     sendResponse({ success: false, error: errorMessage });
   }
+}
+
+async function handleExecuteAutofill(payload: any, sendResponse: (response: any) => void) {
+  try {
+    const { profile, hostname } = payload;
+    
+    // Get the active tab to access its DOM
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    const activeTab = tabs[0];
+    
+    if (!activeTab || !activeTab.id) {
+      sendResponse({ success: false, error: 'No active tab found' });
+      return;
+    }
+    
+    // Execute script to scan and fill fields in the content script context
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: activeTab.id },
+      func: executeAutofillInPage,
+      args: [profile, hostname]
+    });
+    
+    if (results && results[0] && results[0].result) {
+      sendResponse({ success: true, data: results[0].result });
+    } else {
+      sendResponse({ success: false, error: 'Autofill execution failed' });
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    sendResponse({ success: false, error: errorMessage });
+  }
+}
+
+// This function runs in the page context
+function executeAutofillInPage(profile: any, hostname: string) {
+  // Import the modules dynamically since we're in page context
+  return import('lib').then(({ DOMScanner, RulesEngine, FillRunner }) => {
+    const scanner = new DOMScanner();
+    return scanner.scanPage().then(candidates => {
+      if (candidates.length === 0) {
+        return {
+          filledCount: 0,
+          totalFields: 0,
+          mappings: [],
+          results: []
+        };
+      }
+      
+      const rulesEngine = new RulesEngine();
+      return rulesEngine.mapFields(candidates, profile, hostname).then(mappingResult => {
+        const fillRunner = new FillRunner();
+        return fillRunner.fillFields(mappingResult.mappings, candidates, { 
+          dispatchEvents: true, 
+          skipValidation: false 
+        }).then(result => {
+          return {
+            filledCount: result.filled,
+            totalFields: candidates.length,
+            mappings: mappingResult.mappings,
+            results: result.errors
+          };
+        });
+      });
+    });
+  }).catch(error => {
+    console.error('Autofill execution error:', error);
+    return {
+      filledCount: 0,
+      totalFields: 0,
+      mappings: [],
+      results: [],
+      error: error.message
+    };
+  });
 }

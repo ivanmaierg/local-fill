@@ -38,6 +38,7 @@
     {
       "resources": [
         "overlay.js",
+        "suggest.js",
         "client.js",
         "profile.manager.js",
         "overlay.css",

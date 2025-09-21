@@ -2,6 +2,8 @@
 
 export * from './components/Button';
 export * from './components/Input';
+export * from './components/ReviewDrawer';
+export * from './components/SuggestionsPopover';
 export * from './components/Modal';
 export * from './components/Toast';
 export * from './components/Select';

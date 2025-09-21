@@ -267,125 +267,32 @@ export const SidebarApp: React.FC<SidebarAppProps> = () => {
       }
 
       const profile = response.data.activeProfile;
-      const fields = scanFormFields();
-      if (fields.length === 0) {
-        showToast('No form fields found on this page.', 'error');
+      
+      // Use the new autofill system - send message to background script
+      const autofillResponse = await chrome.runtime.sendMessage({ 
+        type: 'EXECUTE_AUTOFILL',
+        payload: { profile, hostname: window.location.hostname }
+      });
+      
+      if (!autofillResponse.success) {
+        showToast(`Autofill failed: ${autofillResponse.error}`, 'error');
         return;
       }
-
-      // Perform autofill
-      const filledFields = await performAutofill(fields, profile);
       
-      if (filledFields > 0) {
-        showToast(`Successfully filled ${filledFields} fields!`, 'success');
+      const { filledCount } = autofillResponse.data;
+      
+      if (filledCount > 0) {
+        showToast(`Successfully filled ${filledCount} fields!`, 'success');
       } else {
         showToast('No fields could be automatically filled.', 'error');
       }
     } catch (error) {
+      console.error('Autofill error:', error);
       showToast('Failed to trigger autofill. Please try again.', 'error');
     }
   };
 
-  const performAutofill = async (fields: HTMLElement[], profile: any): Promise<number> => {
-    let filledCount = 0;
-
-    for (const field of fields) {
-      try {
-        const fieldValue = getFieldValue(field, profile);
-        if (fieldValue) {
-          if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
-            field.value = fieldValue;
-            
-            // Dispatch events to trigger any form validation
-            field.dispatchEvent(new Event('input', { bubbles: true }));
-            field.dispatchEvent(new Event('change', { bubbles: true }));
-            field.dispatchEvent(new Event('blur', { bubbles: true }));
-            
-            filledCount++;
-          } else if (field instanceof HTMLSelectElement) {
-            // For select elements, try to find matching option
-            const option = Array.from(field.options).find(opt => 
-              opt.value.toLowerCase().includes(fieldValue.toLowerCase()) ||
-              opt.text.toLowerCase().includes(fieldValue.toLowerCase())
-            );
-            if (option) {
-              field.value = option.value;
-              field.dispatchEvent(new Event('change', { bubbles: true }));
-              filledCount++;
-            }
-          }
-        }
-      } catch (error) {
-        console.warn('Failed to fill field:', field, error);
-      }
-    }
-
-    return filledCount;
-  };
-
-  const getFieldValue = (field: HTMLElement, profile: any): string | null => {
-    const fieldName = field.getAttribute('name')?.toLowerCase() || '';
-    const fieldType = field.getAttribute('type')?.toLowerCase() || '';
-    const fieldId = field.getAttribute('id')?.toLowerCase() || '';
-    const fieldPlaceholder = field.getAttribute('placeholder')?.toLowerCase() || '';
-
-    // Email field
-    if (fieldType === 'email' || fieldName.includes('email') || fieldId.includes('email') || fieldPlaceholder.includes('email')) {
-      return profile.email || null;
-    }
-
-    // First name
-    if (fieldName.includes('first') || fieldId.includes('first') || fieldPlaceholder.includes('first')) {
-      return profile.firstName || null;
-    }
-
-    // Last name
-    if (fieldName.includes('last') || fieldId.includes('last') || fieldPlaceholder.includes('last')) {
-      return profile.lastName || null;
-    }
-
-    // Full name
-    if (fieldName.includes('name') || fieldId.includes('name') || fieldPlaceholder.includes('name')) {
-      return profile.fullName || profile.firstName + ' ' + profile.lastName || null;
-    }
-
-    // Phone
-    if (fieldType === 'tel' || fieldName.includes('phone') || fieldId.includes('phone') || fieldPlaceholder.includes('phone')) {
-      return profile.phone || null;
-    }
-
-    // LinkedIn
-    if (fieldName.includes('linkedin') || fieldId.includes('linkedin') || fieldPlaceholder.includes('linkedin')) {
-      return profile.linkedin || null;
-    }
-
-    // GitHub
-    if (fieldName.includes('github') || fieldId.includes('github') || fieldPlaceholder.includes('github')) {
-      return profile.github || null;
-    }
-
-    // Portfolio/Website
-    if (fieldType === 'url' || fieldName.includes('website') || fieldName.includes('portfolio') || fieldId.includes('website') || fieldId.includes('portfolio')) {
-      return profile.portfolio || profile.website || null;
-    }
-
-    // Location
-    if (fieldName.includes('location') || fieldName.includes('city') || fieldId.includes('location') || fieldId.includes('city')) {
-      return profile.location || profile.city || null;
-    }
-
-    // Company
-    if (fieldName.includes('company') || fieldId.includes('company') || fieldPlaceholder.includes('company')) {
-      return profile.currentCompany || profile.company || null;
-    }
-
-    // Title/Position
-    if (fieldName.includes('title') || fieldName.includes('position') || fieldId.includes('title') || fieldId.includes('position')) {
-      return profile.currentTitle || profile.title || null;
-    }
-
-    return null;
-  };
+  // Legacy autofill functions removed - now using the new autofill system from @local-fill/lib
 
   const handleOpenSnippetLibrary = () => {
     setIsSnippetLibraryOpen(true);
@@ -465,29 +372,7 @@ export const SidebarApp: React.FC<SidebarAppProps> = () => {
     window.dispatchEvent(new CustomEvent('open-options'));
   };
 
-  const scanFormFields = (): HTMLElement[] => {
-    const formFieldSelectors = [
-      'input[type="text"]',
-      'input[type="email"]',
-      'input[type="tel"]',
-      'input[type="url"]',
-      'input[type="password"]',
-      'textarea',
-      'select'
-    ];
-
-    const fields: HTMLElement[] = [];
-    formFieldSelectors.forEach(selector => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        if (element instanceof HTMLElement && element.offsetParent !== null) {
-          fields.push(element);
-        }
-      });
-    });
-
-    return fields;
-  };
+  // Legacy scanFormFields function removed - now using DomScanner from @local-fill/lib
 
   const widthClass = isFullWidth ? 'w-full' : (isCollapsed ? 'w-10' : 'w-80');
 
