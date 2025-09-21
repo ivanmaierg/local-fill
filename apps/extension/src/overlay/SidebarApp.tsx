@@ -496,12 +496,18 @@ export const SidebarApp: React.FC<SidebarAppProps> = () => {
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-lg transition-all duration-300 ${
+          className={`fixed top-4 z-50 px-4 py-2 rounded-lg shadow-lg transition-all duration-300 ${
             toast.type === 'success'
               ? 'bg-green-500 text-white'
               : 'bg-red-500 text-white'
           }`}
-          style={{ maxWidth: '300px' }}
+          style={{ 
+            maxWidth: '600px',
+            minWidth: '400px',
+            width: 'auto',
+            right: '16px',
+            left: 'auto'
+          }}
         >
           {toast.message}
         </div>

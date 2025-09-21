@@ -1,26 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { copyFileSync, existsSync } from 'fs';
 
 export default defineConfig({
   plugins: [
-    react(),
-    // Plugin to copy manifest and other static files
-    {
-      name: 'copy-manifest',
-      generateBundle() {
-        // Copy manifest.json
-        if (existsSync('manifest.json')) {
-          copyFileSync('manifest.json', 'dist/manifest.json');
-        }
-        
-        // Copy icons
-        if (existsSync('icons')) {
-          // This will be handled by the build process
-        }
-      }
-    }
+    react()
   ],
   build: {
     outDir: 'dist',

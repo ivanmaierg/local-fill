@@ -92,7 +92,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onRemove }) => {
   const type = toast.type || 'info';
 
   return (
-    <div className={`max-w-sm w-full border rounded-lg shadow-lg p-4 ${typeClasses[type]}`}>
+    <div className={`max-w-xl min-w-96 w-full border rounded-lg shadow-lg p-4 ${typeClasses[type]}`}>
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <div className={`h-5 w-5 ${iconClasses[type]}`}>

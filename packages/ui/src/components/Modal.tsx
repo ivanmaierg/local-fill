@@ -6,6 +6,7 @@ export interface ModalProps {
   title?: string;
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  isDarkMode?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -13,7 +14,8 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   children,
-  size = 'md'
+  size = 'md',
+  isDarkMode = false
 }) => {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -52,14 +54,38 @@ export const Modal: React.FC<ModalProps> = ({
         />
         
         {/* Modal */}
-        <div className={`relative w-full ${sizeClasses[size]} bg-white rounded-lg shadow-xl`}>
+        <div 
+          className={`relative w-full ${sizeClasses[size]} rounded-lg shadow-xl`}
+          style={{
+            backgroundColor: isDarkMode ? '#1f2937' : '#ffffff'
+          }}
+        >
           {/* Header */}
           {title && (
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <div 
+              className="flex items-center justify-between p-6 border-b"
+              style={{ 
+                borderColor: isDarkMode ? '#374151' : '#e5e7eb'
+              }}
+            >
+              <h3 
+                className="text-lg font-semibold"
+                style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+              >
+                {title}
+              </h3>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="transition-colors"
+                style={{
+                  color: isDarkMode ? '#9ca3af' : '#6b7280'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = isDarkMode ? '#d1d5db' : '#374151';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = isDarkMode ? '#9ca3af' : '#6b7280';
+                }}
               >
                 <span className="sr-only">Close</span>
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

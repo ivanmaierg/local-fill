@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Card, CardContent, CardHeader, Input, Select, Label, useToast, Modal } from 'ui';
-import { profileManager, ProfileImportResult, storage } from 'lib';
+import { Button, Input, Label, useToast, Modal } from 'ui';
+import { profileManager, storage } from 'lib';
 
 interface Profile {
   id: string;
@@ -27,11 +27,42 @@ export const OptionsPage: React.FC = () => {
   const [importText, setImportText] = useState('');
   const [importName, setImportName] = useState('');
   const [isImporting, setIsImporting] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { addToast } = useToast();
 
   useEffect(() => {
     loadData();
+    
+    // Check for dark mode preference
+    const checkDarkMode = () => {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDarkMode(prefersDark);
+      
+      // Apply dark mode to body
+      if (prefersDark) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    };
+
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleDarkModeChange = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches);
+      if (e.matches) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    };
+
+    checkDarkMode();
+    darkModeQuery.addEventListener('change', handleDarkModeChange);
+
+    return () => {
+      darkModeQuery.removeEventListener('change', handleDarkModeChange);
+    };
   }, []);
 
   const loadData = async () => {
@@ -313,34 +344,74 @@ export const OptionsPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-full bg-gray-50 flex items-center justify-center p-4">
+      <div 
+        className="w-full h-full flex items-center justify-center"
+        style={{
+          backgroundColor: isDarkMode ? '#111827' : '#f9fafb',
+        }}
+      >
         <div className="text-center">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600 text-sm">Loading...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p 
+            className="mt-3 text-sm font-medium"
+            style={{ color: isDarkMode ? '#d1d5db' : '#6b7280' }}
+          >
+            Loading settings...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full h-full bg-gray-50 overflow-y-auto">
-      <div className="max-w-full mx-auto p-4">
-        <header className="mb-4">
-          <h1 className="text-lg font-bold text-gray-900">Local-Fill Settings</h1>
-          <p className="mt-1 text-sm text-gray-600">Manage your job application profiles and settings</p>
+    <div 
+      className="w-full h-full overflow-y-auto"
+      style={{
+        backgroundColor: isDarkMode ? '#111827' : '#f9fafb',
+      }}
+    >
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header className="mb-8 text-center">
+          <h1 
+            className="text-xl sm:text-2xl font-bold mb-2"
+            style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+          >
+            Local-Fill Settings
+          </h1>
+          <p 
+            className="text-sm max-w-2xl mx-auto px-4"
+            style={{ color: isDarkMode ? '#d1d5db' : '#6b7280' }}
+          >
+            Manage your job application profiles and settings for automated form filling
+          </p>
         </header>
 
-        <div className="space-y-4">
+        <div className="space-y-8">
           {/* Profiles Section */}
-          <Card>
-            <CardHeader className="pb-3">
-              <h2 className="text-base font-semibold text-gray-900">Profiles</h2>
-            </CardHeader>
-            <CardContent className="pt-0">
-            
+          <div 
+            className="rounded-xl border shadow-sm"
+            style={{
+              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+              borderColor: isDarkMode ? '#374151' : '#e5e7eb',
+            }}
+          >
+            <div className="p-4 border-b" style={{ borderColor: isDarkMode ? '#374151' : '#e5e7eb' }}>
+              <h2 
+                className="text-lg font-semibold"
+                style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+              >
+                Profiles
+              </h2>
+            </div>
+            <div className="p-4">
               {profiles.length === 0 ? (
-                <div className="text-center py-4">
-                  <p className="text-gray-500 mb-3 text-sm">No profiles found</p>
+                <div className="text-center py-6">
+                  <p 
+                    className="mb-4 text-sm"
+                    style={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }}
+                  >
+                    No profiles found
+                  </p>
                   <div className="space-y-2">
                     <Button onClick={handleCreateProfile} size="sm" className="w-full">
                       Create Profile
@@ -351,41 +422,80 @@ export const OptionsPage: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {profiles.map((profile) => (
                     <div
                       key={profile.id}
-                      className={`p-2 border rounded ${
+                      className={`p-3 border rounded-lg ${
                         activeProfile?.id === profile.id
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200'
+                          ? 'border-blue-500'
+                          : isDarkMode ? 'border-gray-600' : 'border-gray-200'
                       }`}
+                      style={{
+                        backgroundColor: activeProfile?.id === profile.id 
+                          ? isDarkMode ? '#1e3a8a' : '#dbeafe'
+                          : isDarkMode ? '#374151' : '#ffffff'
+                      }}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-gray-900 text-sm truncate">{profile.name}</h3>
-                          <p className="text-xs text-gray-500 truncate">ID: {profile.id}</p>
+                          <h3 
+                            className="font-medium text-sm truncate"
+                            style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+                          >
+                            {profile.name}
+                          </h3>
+                          <p 
+                            className="text-xs truncate"
+                            style={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }}
+                          >
+                            ID: {profile.id}
+                          </p>
                         </div>
-                        <div className="flex space-x-1 ml-2">
+                        <div className="flex space-x-2 ml-3">
                           <button
                             onClick={() => handleSetActiveProfile(profile)}
-                            className={`text-xs px-2 py-1 rounded ${
+                            className={`text-xs px-3 py-1.5 rounded-md font-medium transition-colors ${
                               activeProfile?.id === profile.id 
-                                ? 'bg-blue-100 text-blue-800' 
-                                : 'text-blue-600 hover:text-blue-800 hover:bg-blue-50'
+                                ? 'bg-blue-600 text-white' 
+                                : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                             }`}
+                            style={isDarkMode && activeProfile?.id !== profile.id ? {
+                              backgroundColor: '#1e3a8a',
+                              color: '#93c5fd'
+                            } : {}}
                           >
-                            {activeProfile?.id === profile.id ? 'Active' : 'Set'}
+                            {activeProfile?.id === profile.id ? 'Active' : 'Set Active'}
                           </button>
                           <button
                             onClick={() => handleExportProfile(profile)}
-                            className="text-xs text-gray-600 hover:text-gray-800 px-2 py-1 rounded hover:bg-gray-50"
+                            className="text-xs px-3 py-1.5 rounded-md font-medium transition-colors"
+                            style={{
+                              color: isDarkMode ? '#9ca3af' : '#6b7280',
+                              backgroundColor: isDarkMode ? '#374151' : '#f3f4f6'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = isDarkMode ? '#4b5563' : '#e5e7eb';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = isDarkMode ? '#374151' : '#f3f4f6';
+                            }}
                           >
                             Export
                           </button>
                           <button
                             onClick={() => handleDeleteProfile(profile)}
-                            className="text-xs text-red-600 hover:text-red-800 px-2 py-1 rounded hover:bg-red-50"
+                            className="text-xs px-3 py-1.5 rounded-md font-medium transition-colors"
+                            style={{
+                              color: '#dc2626',
+                              backgroundColor: '#fef2f2'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#fee2e2';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#fef2f2';
+                            }}
                           >
                             Delete
                           </button>
@@ -396,52 +506,71 @@ export const OptionsPage: React.FC = () => {
                 </div>
               )}
               
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Button onClick={handleCreateProfile} size="sm">
-                  Create Profile
-                </Button>
-                <Button onClick={handleImportProfile} size="sm" variant="outline">
-                  Import Profile
-                </Button>
-                <Button variant="secondary" onClick={handleCopyPrompt} size="sm">
-                  Copy LLM Prompt
-                </Button>
-                {profiles.length > 0 && (
-                  <Button variant="outline" onClick={handleExportAllProfiles} size="sm">
-                    Export All
+              <div className="mt-8 pt-4 border-t" style={{ borderColor: isDarkMode ? '#374151' : '#e5e7eb' }}>
+                <div className="flex flex-wrap gap-3 justify-center">
+                  <Button onClick={handleCreateProfile} size="sm">
+                    Create Profile
                   </Button>
-                )}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".json"
-                  onChange={handleImportFromFile}
-                  className="hidden"
-                />
+                  <Button onClick={handleImportProfile} size="sm" variant="outline">
+                    Import Profile
+                  </Button>
+                  <Button variant="secondary" onClick={handleCopyPrompt} size="sm">
+                    Copy LLM Prompt
+                  </Button>
+                  {profiles.length > 0 && (
+                    <Button variant="outline" onClick={handleExportAllProfiles} size="sm">
+                      Export All
+                    </Button>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json"
+                    onChange={handleImportFromFile}
+                    className="hidden"
+                  />
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Settings Section */}
-          <Card>
-            <CardHeader className="pb-3">
-              <h2 className="text-base font-semibold text-gray-900">Settings</h2>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-3">
+          <div 
+            className="rounded-xl border shadow-sm"
+            style={{
+              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+              borderColor: isDarkMode ? '#374151' : '#e5e7eb',
+            }}
+          >
+            <div className="p-4 border-b" style={{ borderColor: isDarkMode ? '#374151' : '#e5e7eb' }}>
+              <h2 
+                className="text-lg font-semibold"
+                style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+              >
+                Settings
+              </h2>
+            </div>
+            <div className="p-4">
+              <div className="space-y-4">
                 <div>
-                  <Label htmlFor="hotkey" className="text-sm">Keyboard Shortcut</Label>
+                  <Label 
+                    htmlFor="hotkey" 
+                    className="text-sm font-medium block mb-2"
+                    style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+                  >
+                    Keyboard Shortcut
+                  </Label>
                   <Input
                     id="hotkey"
                     type="text"
                     value={settings.hotkey}
-                    onChange={(e) => setSettings({ ...settings, hotkey: e.target.value })}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSettings({ ...settings, hotkey: e.target.value })}
                     placeholder="e.g., Alt+A"
                     className="text-sm"
                   />
                 </div>
                 
-                <div className="flex items-center">
+                <div className="flex items-center space-x-3">
                   <input
                     type="checkbox"
                     id="aiAssist"
@@ -449,13 +578,22 @@ export const OptionsPage: React.FC = () => {
                     onChange={(e) => setSettings({ ...settings, aiAssist: e.target.checked })}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
-                  <Label htmlFor="aiAssist" className="ml-2 text-sm">
+                  <Label 
+                    htmlFor="aiAssist" 
+                    className="text-sm font-medium"
+                    style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+                  >
                     Enable AI Assist (Chrome Built-in AI)
                   </Label>
                 </div>
                 
                 <div>
-                  <Label className="text-sm">Allowed Domains</Label>
+                  <Label 
+                    className="text-sm font-medium block mb-2"
+                    style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+                  >
+                    Allowed Domains
+                  </Label>
                   <div className="space-y-2">
                     {settings.allowlist.map((domain, index) => (
                       <div key={index} className="flex items-center space-x-2">
@@ -463,7 +601,11 @@ export const OptionsPage: React.FC = () => {
                           type="text"
                           value={domain}
                           readOnly
-                          className="flex-1 bg-gray-50 text-sm"
+                          className="flex-1 text-sm"
+                          style={{
+                            backgroundColor: isDarkMode ? '#374151' : '#f9fafb',
+                            borderColor: isDarkMode ? '#4b5563' : '#d1d5db'
+                          }}
                         />
                         <Button variant="ghost" size="sm">
                           Remove
@@ -477,13 +619,15 @@ export const OptionsPage: React.FC = () => {
                 </div>
               </div>
               
-              <div className="mt-4">
-                <Button variant="secondary" size="sm">
-                  Save Settings
-                </Button>
+              <div className="mt-8 pt-4 border-t" style={{ borderColor: isDarkMode ? '#374151' : '#e5e7eb' }}>
+                <div className="flex justify-center">
+                  <Button variant="secondary" size="sm">
+                    Save Settings
+                  </Button>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Import Modal */}
@@ -492,31 +636,50 @@ export const OptionsPage: React.FC = () => {
           onClose={() => setShowImportModal(false)}
           title="Import Profile"
           size="md"
+          isDarkMode={isDarkMode}
         >
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
-              <Label htmlFor="import-name" className="text-sm">Profile Name (Optional)</Label>
+              <Label 
+                htmlFor="import-name" 
+                className="text-sm font-medium block mb-2"
+                style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+              >
+                Profile Name (Optional)
+              </Label>
               <Input
                 id="import-name"
                 value={importName}
-                onChange={(e) => setImportName(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setImportName(e.target.value)}
                 placeholder="Enter a name for this profile"
                 className="text-sm"
+                isDarkMode={isDarkMode}
               />
             </div>
             
             <div>
-              <Label htmlFor="import-text" className="text-sm">Profile JSON</Label>
+              <Label 
+                htmlFor="import-text" 
+                className="text-sm font-medium block mb-2"
+                style={{ color: isDarkMode ? '#f9fafb' : '#111827' }}
+              >
+                Profile JSON
+              </Label>
               <textarea
                 id="import-text"
                 value={importText}
-                onChange={(e) => setImportText(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setImportText(e.target.value)}
                 placeholder="Paste your profile JSON here..."
-                className="w-full h-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-xs"
+                className="w-full h-48 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-xs resize-none"
+                style={{
+                  backgroundColor: isDarkMode ? '#374151' : '#ffffff',
+                  borderColor: isDarkMode ? '#4b5563' : '#d1d5db',
+                  color: isDarkMode ? '#f9fafb' : '#111827'
+                }}
               />
             </div>
             
-            <div className="flex justify-end space-x-2">
+            <div className="flex justify-end space-x-3 pt-2">
               <Button
                 variant="outline"
                 onClick={() => setShowImportModal(false)}
